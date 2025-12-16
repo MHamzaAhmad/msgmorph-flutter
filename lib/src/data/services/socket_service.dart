@@ -61,8 +61,12 @@ class SocketService {
     _connectionController.add(false);
 
     try {
+      // Construct the chat namespace URL
+      final chatUrl =
+          serverUrl.endsWith('/') ? '${serverUrl}chat' : '$serverUrl/chat';
+
       _socket = io.io(
-        serverUrl,
+        chatUrl,
         io.OptionBuilder()
             .setTransports(['websocket'])
             .setQuery({

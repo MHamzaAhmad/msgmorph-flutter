@@ -111,7 +111,10 @@ class ChatController extends ChangeNotifier {
 
     // Subscribe to streams
     _messageSubscription = _socketService!.onMessage.listen((message) {
-      // Avoid duplicates
+      // Ignore messages from self (already handled via optimistic update + API response)
+      if (message.senderId == visitorId) return;
+
+      // Avoid duplicates (by ID)
       if (!_messages.any((m) => m.id == message.id)) {
         _messages.add(message);
         notifyListeners();

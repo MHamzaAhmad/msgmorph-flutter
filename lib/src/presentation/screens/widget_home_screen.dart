@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:msgmorph_flutter/src/core/constants.dart';
 import 'package:msgmorph_flutter/src/data/models/widget_config.dart';
 import 'package:msgmorph_flutter/src/presentation/theme/msgmorph_theme.dart';
+import 'package:msgmorph_flutter/src/msgmorph.dart';
 
 /// Home screen of the widget
 ///
 /// Shows greeting, feedback type buttons, and optional live chat button.
-class WidgetHomeScreen extends StatelessWidget {
+/// Checks agent availability before showing live chat option.
+class WidgetHomeScreen extends StatefulWidget {
   const WidgetHomeScreen({
     super.key,
     required this.config,
@@ -14,6 +16,7 @@ class WidgetHomeScreen extends StatelessWidget {
     required this.onClose,
     required this.onSelectFeedbackType,
     required this.onStartLiveChat,
+    required this.onShowOffline,
   });
 
   final WidgetConfig config;
@@ -21,11 +24,63 @@ class WidgetHomeScreen extends StatelessWidget {
   final VoidCallback onClose;
   final void Function(FeedbackType) onSelectFeedbackType;
   final VoidCallback onStartLiveChat;
+  final VoidCallback onShowOffline;
+
+  @override
+  State<WidgetHomeScreen> createState() => _WidgetHomeScreenState();
+}
+
+class _WidgetHomeScreenState extends State<WidgetHomeScreen> {
+  bool? _isAgentsAvailable;
+  bool _isCheckingAvailability = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAvailability();
+  }
+
+  Future<void> _checkAvailability() async {
+    if (!widget.config.hasLiveChat) {
+      setState(() {
+        _isCheckingAvailability = false;
+        _isAgentsAvailable = false;
+      });
+      return;
+    }
+
+    try {
+      final isAvailable = await MsgMorph.apiClient.checkAvailability(
+        widget.config.projectId,
+      );
+      if (mounted) {
+        setState(() {
+          _isAgentsAvailable = isAvailable;
+          _isCheckingAvailability = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isAgentsAvailable = false;
+          _isCheckingAvailability = false;
+        });
+      }
+    }
+  }
+
+  void _handleLiveChatTap() {
+    if (_isAgentsAvailable == true) {
+      widget.onStartLiveChat();
+    } else {
+      widget.onShowOffline();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final feedbackItems = config.feedbackItems;
-    final hasLiveChat = config.hasLiveChat;
+    final feedbackItems = widget.config.feedbackItems;
+    final hasLiveChat = widget.config.hasLiveChat;
 
     return Column(
       children: [
@@ -40,13 +95,14 @@ class WidgetHomeScreen extends StatelessWidget {
               children: [
                 // Greeting
                 Text(
-                  config.branding.title ?? 'Hey there 👋',
-                  style: theme.headingStyle,
+                  widget.config.branding.title ?? 'Hey there 👋',
+                  style: widget.theme.headingStyle,
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  config.branding.subtitle ?? 'How can we help you today?',
-                  style: theme.secondaryStyle,
+                  widget.config.branding.subtitle ??
+                      'How can we help you today?',
+                  style: widget.theme.secondaryStyle,
                 ),
                 const SizedBox(height: 24),
 
@@ -57,7 +113,7 @@ class WidgetHomeScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: theme.secondaryTextColor,
+                      color: widget.theme.secondaryTextColor,
                       letterSpacing: 0.5,
                     ),
                   ),
@@ -68,8 +124,8 @@ class WidgetHomeScreen extends StatelessWidget {
                     children: feedbackItems.map((item) {
                       return _FeedbackTypeButton(
                         item: item,
-                        theme: theme,
-                        onTap: () => onSelectFeedbackType(
+                        theme: widget.theme,
+                        onTap: () => widget.onSelectFeedbackType(
                           FeedbackType.fromString(item.type),
                         ),
                       );
@@ -80,7 +136,12 @@ class WidgetHomeScreen extends StatelessWidget {
                 // Live chat
                 if (hasLiveChat) ...[
                   const SizedBox(height: 24),
-                  _LiveChatButton(theme: theme, onTap: onStartLiveChat),
+                  _LiveChatButton(
+                    theme: widget.theme,
+                    onTap: _handleLiveChatTap,
+                    isLoading: _isCheckingAvailability,
+                    isAvailable: _isAgentsAvailable,
+                  ),
                 ],
               ],
             ),
@@ -99,11 +160,11 @@ class WidgetHomeScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Logo or icon
-          if (config.branding.logoUrl != null)
+          if (widget.config.branding.logoUrl != null)
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
-                config.branding.logoUrl!,
+                widget.config.branding.logoUrl!,
                 width: 32,
                 height: 32,
                 fit: BoxFit.cover,
@@ -114,8 +175,9 @@ class WidgetHomeScreen extends StatelessWidget {
             _buildDefaultLogo(),
           // Close button
           IconButton(
-            onPressed: onClose,
-            icon: Icon(Icons.close, color: theme.secondaryTextColor, size: 22),
+            onPressed: widget.onClose,
+            icon: Icon(Icons.close,
+                color: widget.theme.secondaryTextColor, size: 22),
           ),
         ],
       ),
@@ -127,7 +189,7 @@ class WidgetHomeScreen extends StatelessWidget {
       width: 32,
       height: 32,
       decoration: BoxDecoration(
-        color: theme.primaryColor,
+        color: widget.theme.primaryColor,
         borderRadius: BorderRadius.circular(8),
       ),
     );
@@ -137,19 +199,20 @@ class WidgetHomeScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: theme.borderColor)),
+        border: Border(top: BorderSide(color: widget.theme.borderColor)),
       ),
       child: Center(
         child: Text.rich(
           TextSpan(
             text: 'Powered by ',
-            style: TextStyle(fontSize: 12, color: theme.secondaryTextColor),
+            style:
+                TextStyle(fontSize: 12, color: widget.theme.secondaryTextColor),
             children: [
               TextSpan(
                 text: 'MsgMorph',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  color: theme.secondaryTextColor,
+                  color: widget.theme.secondaryTextColor,
                 ),
               ),
             ],
@@ -201,13 +264,30 @@ class _FeedbackTypeButton extends StatelessWidget {
 
 /// Live chat CTA button
 class _LiveChatButton extends StatelessWidget {
-  const _LiveChatButton({required this.theme, required this.onTap});
+  const _LiveChatButton({
+    required this.theme,
+    required this.onTap,
+    this.isLoading = false,
+    this.isAvailable,
+  });
 
   final MsgMorphTheme theme;
   final VoidCallback onTap;
+  final bool isLoading;
+  final bool? isAvailable;
 
   @override
   Widget build(BuildContext context) {
+    // Determine subtitle based on availability status
+    String subtitle;
+    if (isLoading) {
+      subtitle = 'Checking availability...';
+    } else if (isAvailable == true) {
+      subtitle = 'We typically reply in minutes';
+    } else {
+      subtitle = 'We\'re currently offline';
+    }
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -227,11 +307,22 @@ class _LiveChatButton extends StatelessWidget {
                 color: Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: const Icon(
-                Icons.chat_bubble_outline,
-                color: Colors.white,
-                size: 20,
-              ),
+              child: isLoading
+                  ? const Center(
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation(Colors.white),
+                        ),
+                      ),
+                    )
+                  : const Icon(
+                      Icons.chat_bubble_outline,
+                      color: Colors.white,
+                      size: 20,
+                    ),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -246,12 +337,29 @@ class _LiveChatButton extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                  Text(
-                    'We typically reply in minutes',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.white.withValues(alpha: 0.6),
-                    ),
+                  Row(
+                    children: [
+                      if (isAvailable != null && !isLoading) ...[
+                        Container(
+                          width: 6,
+                          height: 6,
+                          margin: const EdgeInsets.only(right: 4),
+                          decoration: BoxDecoration(
+                            color: isAvailable == true
+                                ? Colors.green.shade400
+                                : Colors.orange.shade400,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ],
+                      Text(
+                        subtitle,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white.withValues(alpha: 0.6),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

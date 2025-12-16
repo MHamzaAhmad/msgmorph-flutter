@@ -5,10 +5,19 @@ import 'package:msgmorph_flutter/src/presentation/screens/widget_home_screen.dar
 import 'package:msgmorph_flutter/src/presentation/screens/compose_screen.dart';
 import 'package:msgmorph_flutter/src/presentation/screens/success_screen.dart';
 import 'package:msgmorph_flutter/src/presentation/screens/chat_screen.dart';
+import 'package:msgmorph_flutter/src/presentation/screens/offline_screen.dart';
 import 'package:msgmorph_flutter/src/presentation/theme/msgmorph_theme.dart';
 
 /// Widget screen states
-enum WidgetScreen { home, compose, success, liveChat, preChatForm, chatRating }
+enum WidgetScreen {
+  home,
+  compose,
+  success,
+  liveChat,
+  preChatForm,
+  chatRating,
+  offline
+}
 
 /// Main MsgMorph widget container
 ///
@@ -78,6 +87,7 @@ class _MsgMorphWidgetState extends State<MsgMorphWidget> {
         case WidgetScreen.liveChat:
         case WidgetScreen.preChatForm:
         case WidgetScreen.chatRating:
+        case WidgetScreen.offline:
           _currentScreen = WidgetScreen.home;
           break;
         case WidgetScreen.home:
@@ -97,6 +107,12 @@ class _MsgMorphWidgetState extends State<MsgMorphWidget> {
   void _handleStartLiveChat() {
     setState(() {
       _currentScreen = WidgetScreen.liveChat;
+    });
+  }
+
+  void _handleShowOffline() {
+    setState(() {
+      _currentScreen = WidgetScreen.offline;
     });
   }
 
@@ -162,6 +178,7 @@ class _MsgMorphWidgetState extends State<MsgMorphWidget> {
           onClose: _handleClose,
           onSelectFeedbackType: _handleSelectFeedbackType,
           onStartLiveChat: _handleStartLiveChat,
+          onShowOffline: _handleShowOffline,
         );
       case WidgetScreen.compose:
         return ComposeScreen(
@@ -193,6 +210,14 @@ class _MsgMorphWidgetState extends State<MsgMorphWidget> {
           theme: theme,
           onBack: _handleBack,
           onClose: _handleClose,
+        );
+      case WidgetScreen.offline:
+        return OfflineScreen(
+          config: widget.config,
+          theme: theme,
+          onBack: _handleBack,
+          onClose: _handleClose,
+          hasOtherOptions: widget.config.feedbackItems.isNotEmpty,
         );
     }
   }
