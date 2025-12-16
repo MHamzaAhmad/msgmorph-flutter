@@ -58,6 +58,11 @@ class _ComposeScreenState extends State<ComposeScreen> {
     _emailController = TextEditingController(text: widget.initialEmail);
     _nameController = TextEditingController(text: widget.initialName);
 
+    // Add listeners to rebuild when text changes (for button state)
+    _messageController.addListener(() => setState(() {}));
+    _emailController.addListener(() => setState(() {}));
+    _nameController.addListener(() => setState(() {}));
+
     // Auto focus message input
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _focusNode.requestFocus();

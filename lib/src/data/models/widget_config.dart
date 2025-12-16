@@ -126,10 +126,10 @@ class PreChatForm {
 /// Widget configuration model
 class WidgetConfig {
   const WidgetConfig({
-    required this.id,
+    this.id,
     required this.projectId,
     required this.publicId,
-    required this.isEnabled,
+    this.isEnabled,
     required this.branding,
     required this.items,
     required this.collectEmail,
@@ -141,10 +141,10 @@ class WidgetConfig {
     this.preChatForm,
   });
 
-  final String id;
+  final String? id;
   final String projectId;
   final String publicId;
-  final bool isEnabled;
+  final bool? isEnabled;
   final WidgetBranding branding;
   final List<WidgetItem> items;
   final CollectionRequirement collectEmail;
@@ -170,10 +170,10 @@ class WidgetConfig {
 
   factory WidgetConfig.fromJson(Map<String, dynamic> json) {
     return WidgetConfig(
-      id: json['id'] as String,
+      id: json['id'] as String?,
       projectId: json['projectId'] as String,
       publicId: json['publicId'] as String,
-      isEnabled: json['isEnabled'] as bool? ?? true,
+      isEnabled: json['isEnabled'] as bool?,
       branding: WidgetBranding.fromJson(
           json['branding'] as Map<String, dynamic>? ?? {}),
       items: (json['items'] as List<dynamic>?)
@@ -197,10 +197,10 @@ class WidgetConfig {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
+        if (id != null) 'id': id,
         'projectId': projectId,
         'publicId': publicId,
-        'isEnabled': isEnabled,
+        if (isEnabled != null) 'isEnabled': isEnabled,
         'branding': branding.toJson(),
         'items': items.map((e) => e.toJson()).toList(),
         'collectEmail': collectEmail.value,

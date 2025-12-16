@@ -66,10 +66,10 @@ class StorageKeys {
 
 /// Feedback types
 enum FeedbackType {
-  issue('ISSUE', '🐛', 'Bug Report'),
-  featureRequest('FEATURE_REQUEST', '💡', 'Idea'),
-  feedback('FEEDBACK', '💬', 'Feedback'),
-  other('OTHER', '✨', 'Other');
+  issue('issue', '🐛', 'Bug Report'),
+  featureRequest('feature_request', '💡', 'Idea'),
+  feedback('feedback', '💬', 'Feedback'),
+  other('other', '✨', 'Other');
 
   const FeedbackType(this.value, this.emoji, this.label);
 

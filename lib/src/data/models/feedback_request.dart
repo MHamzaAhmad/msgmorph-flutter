@@ -17,13 +17,13 @@ class DeviceContext {
   final String? appVersion;
 
   Map<String, dynamic> toJson() => {
-    if (screenWidth != null) 'screenWidth': screenWidth,
-    if (screenHeight != null) 'screenHeight': screenHeight,
-    if (platform != null) 'platform': platform,
-    if (language != null) 'language': language,
-    if (timezone != null) 'timezone': timezone,
-    if (appVersion != null) 'appVersion': appVersion,
-  };
+        if (screenWidth != null) 'screenWidth': screenWidth,
+        if (screenHeight != null) 'screenHeight': screenHeight,
+        if (platform != null) 'platform': platform,
+        if (language != null) 'language': language,
+        if (timezone != null) 'timezone': timezone,
+        if (appVersion != null) 'appVersion': appVersion,
+      };
 }
 
 /// Feedback submission request
@@ -45,13 +45,13 @@ class FeedbackRequest {
   final DeviceContext? deviceContext;
 
   Map<String, dynamic> toJson() => {
-    'type': type,
-    'content': content,
-    if (email != null) 'email': email,
-    if (name != null) 'name': name,
-    if (customFields != null) 'customFields': customFields,
-    if (deviceContext != null) 'deviceContext': deviceContext!.toJson(),
-  };
+        'type': type,
+        'content': content,
+        if (email != null && email!.trim().isNotEmpty) 'email': email,
+        if (name != null && name!.trim().isNotEmpty) 'name': name,
+        if (customFields != null) 'customFields': customFields,
+        if (deviceContext != null) 'deviceContext': deviceContext!.toJson(),
+      };
 }
 
 /// Feedback submission response
