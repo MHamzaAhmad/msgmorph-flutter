@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:msgmorph_flutter/src/core/constants.dart';
 import 'package:msgmorph_flutter/src/data/models/chat_session.dart';
 import 'package:msgmorph_flutter/src/data/models/chat_message.dart';
+import 'package:msgmorph_flutter/src/data/models/feedback_request.dart';
 import 'package:msgmorph_flutter/src/data/services/socket_service.dart';
 import 'package:msgmorph_flutter/src/msgmorph.dart';
 
@@ -71,6 +72,9 @@ class ChatController extends ChangeNotifier {
         _messages = await api.getMessages(_session!.id);
         await _connectSocket();
       } else {
+        // Collect device context for new sessions
+        final deviceContext = DeviceContext.collect();
+
         // Start new session
         final result = await api.startChat(
           projectId: projectId,
@@ -79,6 +83,7 @@ class ChatController extends ChangeNotifier {
           visitorEmail: visitorEmail,
           initialMessage: initialMessage,
           subject: subject,
+          deviceContext: deviceContext, // Added deviceContext
         );
         _session = result.session;
         if (initialMessage != null) {

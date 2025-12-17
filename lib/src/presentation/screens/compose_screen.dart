@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:msgmorph_flutter/src/core/constants.dart';
 import 'package:msgmorph_flutter/src/data/models/widget_config.dart';
@@ -111,14 +110,8 @@ class _ComposeScreenState extends State<ComposeScreen> {
     });
 
     try {
-      // Collect device context
-      final deviceContext = DeviceContext(
-        screenWidth: MediaQuery.of(context).size.width.toInt(),
-        screenHeight: MediaQuery.of(context).size.height.toInt(),
-        platform: Platform.operatingSystem,
-        language: Localizations.localeOf(context).languageCode,
-        timezone: DateTime.now().timeZoneName,
-      );
+      // Collect device context using the comprehensive collector
+      final deviceContext = DeviceContext.collect();
 
       await MsgMorph.submitFeedback(
         type: widget.feedbackType.value,

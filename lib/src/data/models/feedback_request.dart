@@ -1,28 +1,98 @@
-/// Device context for feedback submission
+import '../../../src/core/context_collector.dart' as collector;
+
+/// Device context for feedback/chat submission
+/// Matches the API deviceContextSchema
 class DeviceContext {
   const DeviceContext({
-    this.screenWidth,
-    this.screenHeight,
-    this.platform,
-    this.language,
-    this.timezone,
+    required this.platform,
+    required this.deviceType,
+    required this.os,
+    this.osVersion,
+    required this.screenWidth,
+    required this.screenHeight,
+    this.windowWidth,
+    this.windowHeight,
+    this.pixelRatio,
+    this.orientation,
+    this.browser,
+    this.browserVersion,
+    this.userAgent,
     this.appVersion,
+    this.appBuildNumber,
+    required this.timezone,
+    required this.language,
+    this.locale,
+    this.connectionType,
+    this.pageUrl,
+    this.pageTitle,
+    this.referrer,
   });
 
-  final int? screenWidth;
-  final int? screenHeight;
-  final String? platform;
-  final String? language;
-  final String? timezone;
+  final String platform; // 'web', 'ios', 'android'
+  final String deviceType; // 'desktop', 'tablet', 'mobile'
+  final String os;
+  final String? osVersion;
+  final int screenWidth;
+  final int screenHeight;
+  final int? windowWidth;
+  final int? windowHeight;
+  final double? pixelRatio;
+  final String? orientation;
+  final String? browser;
+  final String? browserVersion;
+  final String? userAgent;
   final String? appVersion;
+  final String? appBuildNumber;
+  final String timezone;
+  final String language;
+  final String? locale;
+  final String? connectionType;
+  final String? pageUrl;
+  final String? pageTitle;
+  final String? referrer;
+
+  /// Create from the ContextCollector
+  factory DeviceContext.collect() {
+    final ctx = collector.ContextCollector.collect();
+    return DeviceContext(
+      platform: ctx.platform,
+      deviceType: ctx.deviceType,
+      os: ctx.os,
+      osVersion: ctx.osVersion,
+      screenWidth: ctx.screenWidth,
+      screenHeight: ctx.screenHeight,
+      pixelRatio: ctx.pixelRatio,
+      orientation: ctx.orientation,
+      timezone: ctx.timezone,
+      language: ctx.language,
+      locale: ctx.locale,
+      connectionType: ctx.connectionType,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
-        if (screenWidth != null) 'screenWidth': screenWidth,
-        if (screenHeight != null) 'screenHeight': screenHeight,
-        if (platform != null) 'platform': platform,
-        if (language != null) 'language': language,
-        if (timezone != null) 'timezone': timezone,
+        'platform': platform,
+        'deviceType': deviceType,
+        'os': os,
+        if (osVersion != null) 'osVersion': osVersion,
+        'screenWidth': screenWidth,
+        'screenHeight': screenHeight,
+        if (windowWidth != null) 'windowWidth': windowWidth,
+        if (windowHeight != null) 'windowHeight': windowHeight,
+        if (pixelRatio != null) 'pixelRatio': pixelRatio,
+        if (orientation != null) 'orientation': orientation,
+        if (browser != null) 'browser': browser,
+        if (browserVersion != null) 'browserVersion': browserVersion,
+        if (userAgent != null) 'userAgent': userAgent,
         if (appVersion != null) 'appVersion': appVersion,
+        if (appBuildNumber != null) 'appBuildNumber': appBuildNumber,
+        'timezone': timezone,
+        'language': language,
+        if (locale != null) 'locale': locale,
+        if (connectionType != null) 'connectionType': connectionType,
+        if (pageUrl != null) 'pageUrl': pageUrl,
+        if (pageTitle != null) 'pageTitle': pageTitle,
+        if (referrer != null) 'referrer': referrer,
       };
 }
 

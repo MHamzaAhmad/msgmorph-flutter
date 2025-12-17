@@ -10,17 +10,17 @@ import 'package:msgmorph_flutter/src/data/models/feedback_request.dart';
 /// HTTP API client for MsgMorph backend
 class ApiClient {
   ApiClient({required this.baseUrl, http.Client? httpClient})
-    : _httpClient = httpClient ?? http.Client();
+      : _httpClient = httpClient ?? http.Client();
 
   final String baseUrl;
   final http.Client _httpClient;
 
   /// Get headers for requests
   Map<String, String> _headers({String? visitorId, String? visitorName}) => {
-    'Content-Type': 'application/json',
-    if (visitorId != null) 'X-Visitor-Id': visitorId,
-    if (visitorName != null) 'X-Visitor-Name': visitorName,
-  };
+        'Content-Type': 'application/json',
+        if (visitorId != null) 'X-Visitor-Id': visitorId,
+        if (visitorName != null) 'X-Visitor-Name': visitorName,
+      };
 
   /// Make a GET request
   Future<Map<String, dynamic>> _get(
@@ -110,6 +110,7 @@ class ApiClient {
     String? initialMessage,
     String? subject,
     Map<String, dynamic>? metadata,
+    DeviceContext? deviceContext,
   }) async {
     final data = await _post(
       ApiEndpoints.startChat,
@@ -121,6 +122,7 @@ class ApiClient {
         if (initialMessage != null) 'initialMessage': initialMessage,
         if (subject != null) 'subject': subject,
         if (metadata != null) 'metadata': metadata,
+        if (deviceContext != null) 'deviceContext': deviceContext.toJson(),
       },
     );
     return StartChatResult.fromJson(data);
