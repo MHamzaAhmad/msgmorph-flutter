@@ -9,9 +9,9 @@ import 'package:msgmorph_flutter/src/msgmorph.dart';
 
 /// Controller for chat state management
 class ChatController extends ChangeNotifier {
-  ChatController({required this.projectId, required this.visitorId});
+  ChatController({required this.widgetId, required this.visitorId});
 
-  final String projectId;
+  final String widgetId;
   final String visitorId;
 
   // State
@@ -63,13 +63,13 @@ class ChatController extends ChangeNotifier {
 
       // Try to recover existing session first
       final recovered = await api.recoverSession(
+        widgetId: widgetId,
         visitorId: visitorId,
-        projectId: projectId,
       );
 
       if (recovered != null) {
         _session = recovered.session;
-        _messages = await api.getMessages(_session!.id);
+        _messages = await api.getMessages(widgetId, _session!.id);
         await _connectSocket();
       } else {
         // Collect device context for new sessions
@@ -77,17 +77,17 @@ class ChatController extends ChangeNotifier {
 
         // Start new session
         final result = await api.startChat(
-          projectId: projectId,
+          widgetId: widgetId,
           visitorId: visitorId,
           visitorName: visitorName,
           visitorEmail: visitorEmail,
           initialMessage: initialMessage,
           subject: subject,
-          deviceContext: deviceContext, // Added deviceContext
+          deviceContext: deviceContext,
         );
         _session = result.session;
         if (initialMessage != null) {
-          _messages = await api.getMessages(_session!.id);
+          _messages = await api.getMessages(widgetId, _session!.id);
         }
         await _connectSocket();
       }
@@ -189,6 +189,7 @@ class ChatController extends ChangeNotifier {
     try {
       final api = MsgMorph.apiClient;
       final sentMessage = await api.sendMessage(
+        widgetId: widgetId,
         sessionId: _session!.id,
         content: content,
         visitorId: visitorId,
@@ -229,10 +230,36 @@ class ChatController extends ChangeNotifier {
 
     try {
       await MsgMorph.apiClient.rateChat(
+        widgetId: widgetId,
         sessionId: _session!.id,
         rating: rating,
         feedback: feedback,
       );
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+    }
+  }
+
+  /// Request handoff to human agent
+  Future<void> requestHandoff() async {
+    if (_session == null) return;
+
+    try {
+      await MsgMorph.apiClient.requestHandoff(
+        widgetId: widgetId,
+        sessionId: _session!.id,
+        visitorId: visitorId,
+      );
+
+      // Add system message about handoff
+      _messages.add(
+        ChatMessage.system(
+          sessionId: _session!.id,
+          content: 'Connecting you with a team member...',
+        ),
+      );
+      notifyListeners();
     } catch (e) {
       _error = e.toString();
       notifyListeners();

@@ -8,34 +8,41 @@ class ApiEndpoints {
   /// Base path for API v1
   static const String basePath = '/api/v1';
 
+  // Widget endpoints - all use widgetId (publicId) as identifier
+
   /// Get widget configuration by public ID
-  static String widgetConfig(String publicId) =>
-      '$basePath/widget/config/$publicId';
+  static String widgetConfig(String widgetId) =>
+      '$basePath/widget/$widgetId/config';
 
   /// Submit feedback via widget
-  static String submitFeedback(String publicId) =>
-      '$basePath/widget/feedback/$publicId';
+  static String submitFeedback(String widgetId) =>
+      '$basePath/widget/$widgetId/feedback';
 
-  /// Start a new chat session
-  static const String startChat = '$basePath/chat/sessions/start';
-
-  /// Get active session for visitor
-  static const String activeSession = '$basePath/chat/sessions/active';
-
-  /// Get messages for a session
-  static String sessionMessages(String sessionId) =>
-      '$basePath/chat/sessions/$sessionId/messages';
-
-  /// Send message as visitor
-  static String sendVisitorMessage(String sessionId) =>
-      '$basePath/chat/sessions/$sessionId/messages/visitor';
-
-  /// Rate a chat session
-  static String rateSession(String sessionId) =>
-      '$basePath/chat/sessions/$sessionId/rate';
+  // Chat endpoints - now under widget namespace
 
   /// Check agent availability
-  static const String checkAvailability = '$basePath/chat/availability';
+  static String checkAvailability(String widgetId) =>
+      '$basePath/widget/$widgetId/chat/availability';
+
+  /// Get active session for visitor
+  static String activeSession(String widgetId) =>
+      '$basePath/widget/$widgetId/chat/sessions/active';
+
+  /// Start a new chat session
+  static String startChat(String widgetId) =>
+      '$basePath/widget/$widgetId/chat/sessions';
+
+  /// Get messages for a session
+  static String sessionMessages(String widgetId, String sessionId) =>
+      '$basePath/widget/$widgetId/chat/sessions/$sessionId/messages';
+
+  /// Rate a chat session
+  static String rateSession(String widgetId, String sessionId) =>
+      '$basePath/widget/$widgetId/chat/sessions/$sessionId/rate';
+
+  /// Request handoff to human agent
+  static String requestHandoff(String widgetId, String sessionId) =>
+      '$basePath/widget/$widgetId/chat/sessions/$sessionId/handoff';
 }
 
 /// Socket.io event names

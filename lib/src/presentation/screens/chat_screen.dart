@@ -48,7 +48,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<void> _initController() async {
     final visitorId = await MsgMorph.storage.getOrCreateVisitorId();
     _controller = ChatController(
-      projectId: widget.config.projectId,
+      widgetId: widget.config.publicId,
       visitorId: visitorId,
     );
     _controller.addListener(_onControllerUpdate);

@@ -82,18 +82,18 @@ class ApiClient {
   // ==================== Widget API ====================
 
   /// Get widget configuration by public ID
-  Future<WidgetConfig> getWidgetConfig(String publicId) async {
-    final data = await _get(ApiEndpoints.widgetConfig(publicId));
+  Future<WidgetConfig> getWidgetConfig(String widgetId) async {
+    final data = await _get(ApiEndpoints.widgetConfig(widgetId));
     return WidgetConfig.fromJson(data);
   }
 
   /// Submit feedback
   Future<FeedbackResponse> submitFeedback(
-    String publicId,
+    String widgetId,
     FeedbackRequest request,
   ) async {
     final data = await _post(
-      ApiEndpoints.submitFeedback(publicId),
+      ApiEndpoints.submitFeedback(widgetId),
       body: request.toJson(),
     );
     return FeedbackResponse.fromJson(data);
@@ -103,7 +103,7 @@ class ApiClient {
 
   /// Start a new chat session
   Future<StartChatResult> startChat({
-    required String projectId,
+    required String widgetId,
     required String visitorId,
     String? visitorName,
     String? visitorEmail,
@@ -113,9 +113,8 @@ class ApiClient {
     DeviceContext? deviceContext,
   }) async {
     final data = await _post(
-      ApiEndpoints.startChat,
+      ApiEndpoints.startChat(widgetId),
       body: {
-        'projectId': projectId,
         'visitorId': visitorId,
         if (visitorName != null) 'visitorName': visitorName,
         if (visitorEmail != null) 'visitorEmail': visitorEmail,
@@ -130,13 +129,13 @@ class ApiClient {
 
   /// Recover active session for visitor
   Future<StartChatResult?> recoverSession({
+    required String widgetId,
     required String visitorId,
-    required String projectId,
   }) async {
     try {
       final data = await _get(
-        ApiEndpoints.activeSession,
-        queryParams: {'visitorId': visitorId, 'projectId': projectId},
+        ApiEndpoints.activeSession(widgetId),
+        queryParams: {'visitorId': visitorId},
       );
 
       if (data['session'] == null) {
@@ -150,8 +149,9 @@ class ApiClient {
   }
 
   /// Get messages for a session
-  Future<List<ChatMessage>> getMessages(String sessionId) async {
-    final data = await _get(ApiEndpoints.sessionMessages(sessionId));
+  Future<List<ChatMessage>> getMessages(
+      String widgetId, String sessionId) async {
+    final data = await _get(ApiEndpoints.sessionMessages(widgetId, sessionId));
     final messages = data['messages'] as List<dynamic>? ?? [];
     return messages
         .map((e) => ChatMessage.fromJson(e as Map<String, dynamic>))
@@ -160,13 +160,14 @@ class ApiClient {
 
   /// Send a message as visitor
   Future<ChatMessage> sendMessage({
+    required String widgetId,
     required String sessionId,
     required String content,
     required String visitorId,
     String? visitorName,
   }) async {
     final data = await _post(
-      ApiEndpoints.sendVisitorMessage(sessionId),
+      ApiEndpoints.sessionMessages(widgetId, sessionId),
       body: {'content': content},
       visitorId: visitorId,
       visitorName: visitorName,
@@ -176,23 +177,33 @@ class ApiClient {
 
   /// Rate a chat session
   Future<void> rateChat({
+    required String widgetId,
     required String sessionId,
     required int rating,
     String? feedback,
   }) async {
     await _post(
-      ApiEndpoints.rateSession(sessionId),
+      ApiEndpoints.rateSession(widgetId, sessionId),
       body: {'rating': rating, if (feedback != null) 'feedback': feedback},
     );
   }
 
+  /// Request handoff to human agent
+  Future<void> requestHandoff({
+    required String widgetId,
+    required String sessionId,
+    required String visitorId,
+  }) async {
+    await _post(
+      ApiEndpoints.requestHandoff(widgetId, sessionId),
+      visitorId: visitorId,
+    );
+  }
+
   /// Check agent availability
-  Future<bool> checkAvailability(String projectId) async {
+  Future<bool> checkAvailability(String widgetId) async {
     try {
-      final data = await _get(
-        ApiEndpoints.checkAvailability,
-        queryParams: {'projectId': projectId},
-      );
+      final data = await _get(ApiEndpoints.checkAvailability(widgetId));
       return data['isAvailable'] as bool? ?? false;
     } catch (e) {
       return false;
