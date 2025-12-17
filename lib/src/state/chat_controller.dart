@@ -73,7 +73,7 @@ class ChatController extends ChangeNotifier {
         await _connectSocket();
       } else {
         // Collect device context for new sessions
-        final deviceContext = DeviceContext.collect();
+        final deviceContext = await DeviceContext.collectAsync();
 
         // Start new session
         final result = await api.startChat(

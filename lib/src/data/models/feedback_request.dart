@@ -8,6 +8,10 @@ class DeviceContext {
     required this.deviceType,
     required this.os,
     this.osVersion,
+    this.deviceModel,
+    this.deviceBrand,
+    this.deviceManufacturer,
+    this.isPhysicalDevice,
     required this.screenWidth,
     required this.screenHeight,
     this.windowWidth,
@@ -32,6 +36,10 @@ class DeviceContext {
   final String deviceType; // 'desktop', 'tablet', 'mobile'
   final String os;
   final String? osVersion;
+  final String? deviceModel;
+  final String? deviceBrand;
+  final String? deviceManufacturer;
+  final bool? isPhysicalDevice;
   final int screenWidth;
   final int screenHeight;
   final int? windowWidth;
@@ -51,7 +59,30 @@ class DeviceContext {
   final String? pageTitle;
   final String? referrer;
 
-  /// Create from the ContextCollector
+  /// Create from the ContextCollector (async - recommended for detailed info)
+  static Future<DeviceContext> collectAsync() async {
+    final ctx = await collector.ContextCollector.collectAsync();
+    return DeviceContext(
+      platform: ctx.platform,
+      deviceType: ctx.deviceType,
+      os: ctx.os,
+      osVersion: ctx.osVersion,
+      deviceModel: ctx.deviceModel,
+      deviceBrand: ctx.deviceBrand,
+      deviceManufacturer: ctx.deviceManufacturer,
+      isPhysicalDevice: ctx.isPhysicalDevice,
+      screenWidth: ctx.screenWidth,
+      screenHeight: ctx.screenHeight,
+      pixelRatio: ctx.pixelRatio,
+      orientation: ctx.orientation,
+      timezone: ctx.timezone,
+      language: ctx.language,
+      locale: ctx.locale,
+      connectionType: ctx.connectionType,
+    );
+  }
+
+  /// Create from the ContextCollector (sync - less detailed, fallback)
   factory DeviceContext.collect() {
     final ctx = collector.ContextCollector.collect();
     return DeviceContext(
@@ -75,6 +106,11 @@ class DeviceContext {
         'deviceType': deviceType,
         'os': os,
         if (osVersion != null) 'osVersion': osVersion,
+        if (deviceModel != null) 'deviceModel': deviceModel,
+        if (deviceBrand != null) 'deviceBrand': deviceBrand,
+        if (deviceManufacturer != null)
+          'deviceManufacturer': deviceManufacturer,
+        if (isPhysicalDevice != null) 'isPhysicalDevice': isPhysicalDevice,
         'screenWidth': screenWidth,
         'screenHeight': screenHeight,
         if (windowWidth != null) 'windowWidth': windowWidth,

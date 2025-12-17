@@ -110,8 +110,8 @@ class _ComposeScreenState extends State<ComposeScreen> {
     });
 
     try {
-      // Collect device context using the comprehensive collector
-      final deviceContext = DeviceContext.collect();
+      // Collect device context using the comprehensive async collector
+      final deviceContext = await DeviceContext.collectAsync();
 
       await MsgMorph.submitFeedback(
         type: widget.feedbackType.value,

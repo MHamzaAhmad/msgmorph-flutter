@@ -3,10 +3,11 @@
 // Collects comprehensive device context for debugging.
 // Used when submitting feedback or starting live chat.
 //
-// Note: No OS-level permissions are required for this data.
+// Uses device_info_plus for accurate device information.
 
 import 'dart:io';
 import 'dart:ui';
+import 'package:device_info_plus/device_info_plus.dart';
 
 /// Device context for debugging
 class DeviceContext {
@@ -14,6 +15,10 @@ class DeviceContext {
   final String deviceType;
   final String os;
   final String? osVersion;
+  final String? deviceModel;
+  final String? deviceBrand;
+  final String? deviceManufacturer;
+  final bool? isPhysicalDevice;
   final int screenWidth;
   final int screenHeight;
   final double? pixelRatio;
@@ -30,6 +35,10 @@ class DeviceContext {
     required this.deviceType,
     required this.os,
     this.osVersion,
+    this.deviceModel,
+    this.deviceBrand,
+    this.deviceManufacturer,
+    this.isPhysicalDevice,
     required this.screenWidth,
     required this.screenHeight,
     this.pixelRatio,
@@ -48,6 +57,10 @@ class DeviceContext {
       'deviceType': deviceType,
       'os': os,
       if (osVersion != null) 'osVersion': osVersion,
+      if (deviceModel != null) 'deviceModel': deviceModel,
+      if (deviceBrand != null) 'deviceBrand': deviceBrand,
+      if (deviceManufacturer != null) 'deviceManufacturer': deviceManufacturer,
+      if (isPhysicalDevice != null) 'isPhysicalDevice': isPhysicalDevice,
       'screenWidth': screenWidth,
       'screenHeight': screenHeight,
       if (pixelRatio != null) 'pixelRatio': pixelRatio,
@@ -64,6 +77,8 @@ class DeviceContext {
 
 /// Context collector utility
 class ContextCollector {
+  static final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
+
   /// Detect device type (phone or tablet)
   static String _detectDeviceType() {
     final view = PlatformDispatcher.instance.views.first;
@@ -84,31 +99,77 @@ class ContextCollector {
     return size.height >= size.width ? 'portrait' : 'landscape';
   }
 
-  /// Collect device context
+  /// Collect device context (async for device_info_plus)
+  static Future<DeviceContext> collectAsync() async {
+    final view = PlatformDispatcher.instance.views.first;
+    final size = view.physicalSize / view.devicePixelRatio;
+    final locale = PlatformDispatcher.instance.locale;
+
+    String? deviceModel;
+    String? deviceBrand;
+    String? deviceManufacturer;
+    String? osVersion;
+    bool? isPhysicalDevice;
+
+    try {
+      if (Platform.isIOS) {
+        final iosInfo = await _deviceInfo.iosInfo;
+        deviceModel = iosInfo.model;
+        deviceBrand = 'Apple';
+        deviceManufacturer = 'Apple';
+        osVersion = iosInfo.systemVersion;
+        isPhysicalDevice = iosInfo.isPhysicalDevice;
+      } else if (Platform.isAndroid) {
+        final androidInfo = await _deviceInfo.androidInfo;
+        deviceModel = androidInfo.model;
+        deviceBrand = androidInfo.brand;
+        deviceManufacturer = androidInfo.manufacturer;
+        osVersion = androidInfo.version.release;
+        isPhysicalDevice = androidInfo.isPhysicalDevice;
+      }
+    } catch (e) {
+      // Fallback to basic info if device_info_plus fails
+      osVersion = Platform.operatingSystemVersion;
+    }
+
+    return DeviceContext(
+      platform: Platform.isIOS ? 'ios' : 'android',
+      deviceType: _detectDeviceType(),
+      os: Platform.isIOS ? 'iOS' : 'Android',
+      osVersion: osVersion ?? Platform.operatingSystemVersion,
+      deviceModel: deviceModel,
+      deviceBrand: deviceBrand,
+      deviceManufacturer: deviceManufacturer,
+      isPhysicalDevice: isPhysicalDevice,
+      screenWidth: size.width.round(),
+      screenHeight: size.height.round(),
+      pixelRatio: view.devicePixelRatio,
+      orientation: _getOrientation(),
+      timezone: DateTime.now().timeZoneName,
+      language: locale.languageCode,
+      locale: locale.toLanguageTag(),
+      connectionType: 'unknown',
+    );
+  }
+
+  /// Collect device context (sync fallback - less detailed)
   static DeviceContext collect() {
     final view = PlatformDispatcher.instance.views.first;
     final size = view.physicalSize / view.devicePixelRatio;
     final locale = PlatformDispatcher.instance.locale;
 
     return DeviceContext(
-      // Device Info
       platform: Platform.isIOS ? 'ios' : 'android',
       deviceType: _detectDeviceType(),
       os: Platform.isIOS ? 'iOS' : 'Android',
       osVersion: Platform.operatingSystemVersion,
-
-      // Screen
       screenWidth: size.width.round(),
       screenHeight: size.height.round(),
       pixelRatio: view.devicePixelRatio,
       orientation: _getOrientation(),
-
-      // Locale
       timezone: DateTime.now().timeZoneName,
       language: locale.languageCode,
       locale: locale.toLanguageTag(),
-
-      // Connection type not collected (would require permissions)
       connectionType: 'unknown',
     );
   }
