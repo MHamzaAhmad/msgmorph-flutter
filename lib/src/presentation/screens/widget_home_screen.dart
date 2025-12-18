@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:msgmorph_flutter/src/core/constants.dart';
-import 'package:msgmorph_flutter/src/data/models/widget_config.dart';
-import 'package:msgmorph_flutter/src/presentation/theme/msgmorph_theme.dart';
+import 'package:msgmorph/src/core/constants.dart';
+import 'package:msgmorph/src/data/models/widget_config.dart';
+import 'package:msgmorph/src/presentation/theme/msgmorph_theme.dart';
 
 /// Home screen of the widget
 ///

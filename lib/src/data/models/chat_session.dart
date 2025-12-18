@@ -1,4 +1,4 @@
-import 'package:msgmorph_flutter/src/core/constants.dart';
+import 'package:msgmorph/src/core/constants.dart';
 
 /// Chat session model
 class ChatSession {

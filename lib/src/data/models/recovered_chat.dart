@@ -1,5 +1,5 @@
-import 'package:msgmorph_flutter/src/data/models/chat_session.dart';
-import 'package:msgmorph_flutter/src/data/models/chat_message.dart';
+import 'package:msgmorph/src/data/models/chat_session.dart';
+import 'package:msgmorph/src/data/models/chat_message.dart';
 
 /// Result of recovering or starting a chat session
 class RecoveredChat {

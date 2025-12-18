@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:msgmorph_flutter/src/data/models/widget_config.dart';
-import 'package:msgmorph_flutter/src/data/models/chat_message.dart';
-import 'package:msgmorph_flutter/src/state/chat_controller.dart';
-import 'package:msgmorph_flutter/src/msgmorph.dart';
-import 'package:msgmorph_flutter/src/presentation/theme/msgmorph_theme.dart';
-import 'package:msgmorph_flutter/src/presentation/widgets/chat/message_bubble.dart';
-import 'package:msgmorph_flutter/src/presentation/widgets/chat/chat_input.dart';
-import 'package:msgmorph_flutter/src/presentation/widgets/chat/typing_indicator.dart';
-import 'package:msgmorph_flutter/src/presentation/widgets/chat/pre_chat_form.dart';
-import 'package:msgmorph_flutter/src/presentation/widgets/chat/chat_rating.dart';
+import 'package:msgmorph/src/data/models/widget_config.dart';
+import 'package:msgmorph/src/data/models/chat_message.dart';
+import 'package:msgmorph/src/state/chat_controller.dart';
+import 'package:msgmorph/src/msgmorph.dart';
+import 'package:msgmorph/src/presentation/theme/msgmorph_theme.dart';
+import 'package:msgmorph/src/presentation/widgets/chat/message_bubble.dart';
+import 'package:msgmorph/src/presentation/widgets/chat/chat_input.dart';
+import 'package:msgmorph/src/presentation/widgets/chat/typing_indicator.dart';
+import 'package:msgmorph/src/presentation/widgets/chat/pre_chat_form.dart';
+import 'package:msgmorph/src/presentation/widgets/chat/chat_rating.dart';
 
 /// Chat screen for live chat functionality
 class ChatScreen extends StatefulWidget {

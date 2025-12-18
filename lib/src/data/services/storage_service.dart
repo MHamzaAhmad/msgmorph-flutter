@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:msgmorph_flutter/src/core/constants.dart';
+import 'package:msgmorph/src/core/constants.dart';
 
 /// Local storage service for persisting visitor ID and session data
 class StorageService {

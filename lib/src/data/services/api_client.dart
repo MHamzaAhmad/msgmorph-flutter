@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:msgmorph_flutter/src/core/constants.dart';
-import 'package:msgmorph_flutter/src/core/exceptions.dart';
-import 'package:msgmorph_flutter/src/data/models/widget_config.dart';
-import 'package:msgmorph_flutter/src/data/models/chat_session.dart';
-import 'package:msgmorph_flutter/src/data/models/chat_message.dart';
-import 'package:msgmorph_flutter/src/data/models/feedback_request.dart';
+import 'package:msgmorph/src/core/constants.dart';
+import 'package:msgmorph/src/core/exceptions.dart';
+import 'package:msgmorph/src/data/models/widget_config.dart';
+import 'package:msgmorph/src/data/models/chat_session.dart';
+import 'package:msgmorph/src/data/models/chat_message.dart';
+import 'package:msgmorph/src/data/models/feedback_request.dart';
 
 /// HTTP API client for MsgMorph backend
 class ApiClient {

@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:msgmorph_flutter/src/core/constants.dart';
-import 'package:msgmorph_flutter/src/data/models/chat_session.dart';
-import 'package:msgmorph_flutter/src/data/models/chat_message.dart';
-import 'package:msgmorph_flutter/src/data/models/feedback_request.dart';
-import 'package:msgmorph_flutter/src/data/services/socket_service.dart';
-import 'package:msgmorph_flutter/src/msgmorph.dart';
+import 'package:msgmorph/src/core/constants.dart';
+import 'package:msgmorph/src/data/models/chat_session.dart';
+import 'package:msgmorph/src/data/models/chat_message.dart';
+import 'package:msgmorph/src/data/models/feedback_request.dart';
+import 'package:msgmorph/src/data/services/socket_service.dart';
+import 'package:msgmorph/src/msgmorph.dart';
 
 /// Controller for chat state management
 class ChatController extends ChangeNotifier {

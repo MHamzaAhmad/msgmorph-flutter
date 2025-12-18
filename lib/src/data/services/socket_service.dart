@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:socket_io_client/socket_io_client.dart' as io;
-import 'package:msgmorph_flutter/src/core/constants.dart';
-import 'package:msgmorph_flutter/src/core/exceptions.dart';
-import 'package:msgmorph_flutter/src/data/models/chat_message.dart';
-import 'package:msgmorph_flutter/src/data/models/chat_session.dart';
+import 'package:msgmorph/src/core/constants.dart';
+import 'package:msgmorph/src/core/exceptions.dart';
+import 'package:msgmorph/src/data/models/chat_message.dart';
+import 'package:msgmorph/src/data/models/chat_session.dart';
 
 /// Socket.io service for real-time chat functionality
 class SocketService {

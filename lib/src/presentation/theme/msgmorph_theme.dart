@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:msgmorph_flutter/src/data/models/widget_config.dart';
+import 'package:msgmorph/src/data/models/widget_config.dart';
 
 /// Theme configuration derived from widget config
 class MsgMorphTheme {

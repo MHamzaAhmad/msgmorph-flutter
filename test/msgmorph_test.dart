@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:msgmorph_flutter/msgmorph_flutter.dart';
+import 'package:msgmorph/msgmorph.dart';
 
 void main() {
   group('MsgMorph', () {

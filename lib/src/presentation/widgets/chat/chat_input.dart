@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:msgmorph_flutter/src/presentation/theme/msgmorph_theme.dart';
+import 'package:msgmorph/src/presentation/theme/msgmorph_theme.dart';
 
 /// Chat message input widget
 class ChatInputWidget extends StatelessWidget {

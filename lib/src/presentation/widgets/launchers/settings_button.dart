@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:msgmorph_flutter/src/msgmorph.dart';
+import 'package:msgmorph/src/msgmorph.dart';
 
 /// Settings row button launcher
 ///

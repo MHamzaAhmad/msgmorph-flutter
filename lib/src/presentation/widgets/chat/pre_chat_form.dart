@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:msgmorph_flutter/src/data/models/widget_config.dart';
-import 'package:msgmorph_flutter/src/presentation/theme/msgmorph_theme.dart';
+import 'package:msgmorph/src/data/models/widget_config.dart';
+import 'package:msgmorph/src/presentation/theme/msgmorph_theme.dart';
 
 /// Pre-chat form for collecting visitor information
 class PreChatFormWidget extends StatefulWidget {

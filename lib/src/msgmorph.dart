@@ -1,21 +1,21 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart' show showModalBottomSheet, Colors;
-import 'package:msgmorph_flutter/src/core/exceptions.dart';
-import 'package:msgmorph_flutter/src/data/models/widget_config.dart';
-import 'package:msgmorph_flutter/src/data/models/feedback_request.dart';
-import 'package:msgmorph_flutter/src/data/models/chat_session.dart';
-import 'package:msgmorph_flutter/src/data/models/chat_message.dart';
-import 'package:msgmorph_flutter/src/data/models/recovered_chat.dart';
-import 'package:msgmorph_flutter/src/data/services/api_client.dart';
-import 'package:msgmorph_flutter/src/data/services/storage_service.dart';
-import 'package:msgmorph_flutter/src/data/services/chat_client.dart';
-import 'package:msgmorph_flutter/src/presentation/widgets/msgmorph_widget.dart';
-import 'package:msgmorph_flutter/src/presentation/widgets/launchers/floating_launcher.dart';
-import 'package:msgmorph_flutter/src/presentation/widgets/launchers/settings_button.dart';
-import 'package:msgmorph_flutter/src/presentation/widgets/launchers/edge_ribbon.dart';
-import 'package:msgmorph_flutter/src/presentation/widgets/launchers/inline_button.dart';
-import 'package:msgmorph_flutter/src/core/constants.dart';
+import 'package:msgmorph/src/core/exceptions.dart';
+import 'package:msgmorph/src/data/models/widget_config.dart';
+import 'package:msgmorph/src/data/models/feedback_request.dart';
+import 'package:msgmorph/src/data/models/chat_session.dart';
+import 'package:msgmorph/src/data/models/chat_message.dart';
+import 'package:msgmorph/src/data/models/recovered_chat.dart';
+import 'package:msgmorph/src/data/services/api_client.dart';
+import 'package:msgmorph/src/data/services/storage_service.dart';
+import 'package:msgmorph/src/data/services/chat_client.dart';
+import 'package:msgmorph/src/presentation/widgets/msgmorph_widget.dart';
+import 'package:msgmorph/src/presentation/widgets/launchers/floating_launcher.dart';
+import 'package:msgmorph/src/presentation/widgets/launchers/settings_button.dart';
+import 'package:msgmorph/src/presentation/widgets/launchers/edge_ribbon.dart';
+import 'package:msgmorph/src/presentation/widgets/launchers/inline_button.dart';
+import 'package:msgmorph/src/core/constants.dart';
 
 /// Main entry point for MsgMorph SDK
 ///

@@ -1,5 +1,5 @@
-import 'package:msgmorph_flutter/src/core/constants.dart';
-import 'package:msgmorph_flutter/src/data/models/widget_item.dart';
+import 'package:msgmorph/src/core/constants.dart';
+import 'package:msgmorph/src/data/models/widget_item.dart';
 
 /// Widget branding configuration
 class WidgetBranding {
