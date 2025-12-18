@@ -70,8 +70,8 @@ class SocketService {
         io.OptionBuilder()
             .setTransports(['websocket'])
             .setQuery({
-              'clientId': visitorId,
-              'clientType': 'visitor',
+              'userType': 'visitor',
+              'visitorId': visitorId,
               'sessionId': sessionId,
             })
             .enableAutoConnect()
