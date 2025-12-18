@@ -2,7 +2,14 @@ name: msgmorph_flutter
 description: "MsgMorph Flutter SDK - Native feedback widget and live chat for Flutter apps"
 version: 0.1.0
 homepage: https://msgmorph.com
-repository: https://github.com/msgmorph/msgmorph-flutter
+repository: https://github.com/MHamzaAhmad/msgmorph-flutter
+issue_tracker: https://github.com/MHamzaAhmad/msgmorph-flutter/issues
+documentation: https://docs.msgmorph.com
+topics:
+  - feedback
+  - widget
+  - customer-support
+  - live-chat
 
 environment:
   sdk: ^3.0.0
