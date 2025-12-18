@@ -6,6 +6,7 @@
   - Issue reporting, feature requests, general feedback
   - Email/name collection (required, optional, or none)
   - Success confirmation screen
+- **Headless APIs** - Build custom UIs with `MsgMorphController`
 - **Live Chat** - Real-time chat with support agents
   - Agent availability detection with offline screen
   - Typing indicators
