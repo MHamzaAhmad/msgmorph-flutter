@@ -285,11 +285,14 @@ class _LiveChatButton extends StatelessWidget {
                           shape: BoxShape.circle,
                         ),
                       ),
-                      Text(
-                        subtitle,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white.withValues(alpha: 0.6),
+                      Flexible(
+                        child: Text(
+                          subtitle,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white.withValues(alpha: 0.6),
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
