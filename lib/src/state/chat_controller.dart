@@ -86,9 +86,7 @@ class ChatController extends ChangeNotifier {
           deviceContext: deviceContext,
         );
         _session = result.session;
-        if (initialMessage != null) {
-          _messages = await api.getMessages(widgetId, _session!.id);
-        }
+        _messages = await api.getMessages(widgetId, _session!.id);
         await _connectSocket();
       }
 

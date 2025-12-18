@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:msgmorph_flutter/src/core/constants.dart';
 import 'package:msgmorph_flutter/src/data/models/widget_config.dart';
 import 'package:msgmorph_flutter/src/presentation/theme/msgmorph_theme.dart';
-import 'package:msgmorph_flutter/src/msgmorph.dart';
 
 /// Home screen of the widget
 ///
@@ -31,50 +30,13 @@ class WidgetHomeScreen extends StatefulWidget {
 }
 
 class _WidgetHomeScreenState extends State<WidgetHomeScreen> {
-  bool? _isAgentsAvailable;
-  bool _isCheckingAvailability = true;
-
   @override
   void initState() {
     super.initState();
-    _checkAvailability();
-  }
-
-  Future<void> _checkAvailability() async {
-    if (!widget.config.hasLiveChat) {
-      setState(() {
-        _isCheckingAvailability = false;
-        _isAgentsAvailable = false;
-      });
-      return;
-    }
-
-    try {
-      final isAvailable = await MsgMorph.apiClient.checkAvailability(
-        widget.config.projectId,
-      );
-      if (mounted) {
-        setState(() {
-          _isAgentsAvailable = isAvailable;
-          _isCheckingAvailability = false;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isAgentsAvailable = false;
-          _isCheckingAvailability = false;
-        });
-      }
-    }
   }
 
   void _handleLiveChatTap() {
-    if (_isAgentsAvailable == true) {
-      widget.onStartLiveChat();
-    } else {
-      widget.onShowOffline();
-    }
+    widget.onStartLiveChat();
   }
 
   @override
@@ -139,8 +101,6 @@ class _WidgetHomeScreenState extends State<WidgetHomeScreen> {
                   _LiveChatButton(
                     theme: widget.theme,
                     onTap: _handleLiveChatTap,
-                    isLoading: _isCheckingAvailability,
-                    isAvailable: _isAgentsAvailable,
                   ),
                 ],
               ],
@@ -267,26 +227,14 @@ class _LiveChatButton extends StatelessWidget {
   const _LiveChatButton({
     required this.theme,
     required this.onTap,
-    this.isLoading = false,
-    this.isAvailable,
   });
 
   final MsgMorphTheme theme;
   final VoidCallback onTap;
-  final bool isLoading;
-  final bool? isAvailable;
 
   @override
   Widget build(BuildContext context) {
-    // Determine subtitle based on availability status
-    String subtitle;
-    if (isLoading) {
-      subtitle = 'Checking availability...';
-    } else if (isAvailable == true) {
-      subtitle = 'We typically reply in minutes';
-    } else {
-      subtitle = 'We\'re currently offline';
-    }
+    const subtitle = 'Instant AI support • Humans available on request';
 
     return GestureDetector(
       onTap: onTap,
@@ -307,22 +255,11 @@ class _LiveChatButton extends StatelessWidget {
                 color: Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: isLoading
-                  ? const Center(
-                      child: SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation(Colors.white),
-                        ),
-                      ),
-                    )
-                  : const Icon(
-                      Icons.chat_bubble_outline,
-                      color: Colors.white,
-                      size: 20,
-                    ),
+              child: const Icon(
+                Icons.chat_bubble_outline,
+                color: Colors.white,
+                size: 20,
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -339,19 +276,15 @@ class _LiveChatButton extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      if (isAvailable != null && !isLoading) ...[
-                        Container(
-                          width: 6,
-                          height: 6,
-                          margin: const EdgeInsets.only(right: 4),
-                          decoration: BoxDecoration(
-                            color: isAvailable == true
-                                ? Colors.green.shade400
-                                : Colors.orange.shade400,
-                            shape: BoxShape.circle,
-                          ),
+                      Container(
+                        width: 6,
+                        height: 6,
+                        margin: const EdgeInsets.only(right: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade400,
+                          shape: BoxShape.circle,
                         ),
-                      ],
+                      ),
                       Text(
                         subtitle,
                         style: TextStyle(
